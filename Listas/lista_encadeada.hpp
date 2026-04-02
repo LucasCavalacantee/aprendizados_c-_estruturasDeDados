@@ -15,7 +15,7 @@ void iniciaLista(listaPokemon &lista){
     lista.inicio = NULL;
 }
 
-void insere_fim(listaPokemon &lista, string nomeCarta, int raridade){
+void insereFim(listaPokemon &lista, string nomeCarta, int raridade){
     cartaPokemon *novo = new cartaPokemon;
     
     novo->nomeCarta = nomeCarta;

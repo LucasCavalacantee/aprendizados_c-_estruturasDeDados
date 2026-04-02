@@ -37,14 +37,14 @@ void insereFim(ListaE<TIPO> &lista, TIPO dado){
 }
 
 template<typename TIPO>
-void imprimirItens(const ListaE<TIPO> &lista){
+void imprimirItens(ListaE<TIPO> &lista){
     if(lista.inicio == NULL){
         cout << "Lista vazia" << endl;
         return;
     }
 
     cout << "Itens:" << endl;
-    const ElementoE<TIPO> *nav = lista.inicio;
+    ElementoE<TIPO> *nav = lista.inicio;
     while(nav != NULL){
         cout << nav->dado << endl;
         cout << "--------" << endl;
