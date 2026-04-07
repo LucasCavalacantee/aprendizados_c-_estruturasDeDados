@@ -1,10 +1,25 @@
 #include <iostream>
-#include "Listas/lista_duplamente_encadeada.hpp"
+#include "listaEstatica.hpp"
+#include "TAD_POKEMON.hpp"
 using namespace std;
 
 
 int main() {
 
+    Lista lista;
+    cartaPokemon a1, a2, a3, a4;
+
+    inicializa_baralho(lista);
+    montaCarta(a1, "Pikachu", 5);
+    montaCarta(a2, "Bobassauro", 4);
+    montaCarta(a3, "Charmander", 3);
+    montaCarta(a4, "Junior", 100);
+    
+    insereFim(lista, a1);
+    insereFim(lista, a2);
+    insereFim(lista, a3);
+    insereFim(lista, a4);
+    imprimir(lista);
     
     /*
     Implementação Generica duplamente encadeada
@@ -22,7 +37,6 @@ int main() {
 
     /*
     Implementação duplamente encadeada
-    */
 
     ListaDE lista;
  
@@ -30,15 +44,14 @@ int main() {
     insereInicio(lista, "pikachu", 78);
     insereInicio(lista, "charmander", 54);
     insereInicio(lista, "reshiram", 100);
-    insereInicio(lista, "pikachu2", 78);
-    insereInicio(lista, "charmander2", 54);
-    insereInicio(lista, "reshiram2", 100);
-        imprimir(lista);
+    imprimir(lista);
 
     cout << endl;
 
-    inserePosicao(lista, "bortoleto", 450, 7);
+    removePosicao(lista, 2);
     imprimir(lista);
+    */
+
 
     
 

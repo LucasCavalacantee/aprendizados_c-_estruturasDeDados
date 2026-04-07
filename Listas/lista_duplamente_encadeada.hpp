@@ -120,6 +120,23 @@ void inserePosicao(ListaDE &lista, string nomeCarta, int raridade, int posicao){
     nav->anterior = novo;
 }
 
+void removePosicao(ListaDE &lista, int posicao){
+cartaPokemon *nav = lista.inicio;
+    for(int i = 1; i < posicao; i++){
+        if(nav->proximo != NULL){
+            nav = nav->proximo; //funciona como se fosse um i++, serve para avançar a lista
+        }
+        else{
+            cout << "Posição Indisponivel!" << endl;
+            return;
+        }
+    }
+
+    nav->anterior->proximo = nav->proximo;
+    delete nav;
+}
+
+
 void imprimir(ListaDE lista){
     if(lista.inicio == NULL){
         cout<<"Lista vazia";

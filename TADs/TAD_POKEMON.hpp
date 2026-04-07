@@ -18,4 +18,10 @@ inline ostream& operator<<(ostream &out, const cartaPokemon &carta){
 }
 
 
-
+bool operator<(cartaPokemon a, cartaPokemon b){
+    if(a.nivel < b.nivel){
+        return true;
+    } else {
+        return false;
+    }
+}
