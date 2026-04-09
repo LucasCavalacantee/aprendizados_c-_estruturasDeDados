@@ -8,7 +8,6 @@ struct cartaPokemon{
     cartaPokemon *anterior;
 };
 
-
 struct ListaDE{
     cartaPokemon *inicio;
     cartaPokemon *fim;
@@ -38,14 +37,20 @@ void insereInicio(ListaDE &lista, string nomeCarta, int raridade){
 }
 
 void removeInicio(ListaDE &lista){
-    cartaPokemon *nav = new cartaPokemon;
+    // cartaPokemon *nav = new cartaPokemon; ❌ ERRADO (vazamento de memória)
+    cartaPokemon *nav;
+
+    if(lista.inicio == NULL) return; // ✅ proteção contra lista vazia
+
+    nav = lista.inicio;
 
     if(lista.inicio->proximo == NULL){
         lista.inicio = NULL;
+        lista.fim = NULL; // ✅ corrigido (antes não tratava fim)
+    } else {
+        lista.inicio = lista.inicio->proximo;
+        lista.inicio->anterior = NULL; // ✅ corrigido
     }
-
-    nav = lista.inicio;
-    lista.inicio = lista.inicio->proximo;
 
     delete nav;
 }
@@ -72,21 +77,27 @@ void insereFim(ListaDE &lista, string nomeCarta, int raridade){
 void removeFim(ListaDE &lista){
     if(lista.inicio == NULL){
         cout<<"Lista esta vazia";
+        return; // ✅ faltava return
     }
 
-    cartaPokemon *nav = lista.inicio;
+    // cartaPokemon *nav = lista.inicio; ❌ desnecessário
+    cartaPokemon *nav = lista.fim; // ✅ correto
 
-    if(nav->proximo == NULL){
+    if(lista.inicio == lista.fim){
         delete nav;
-        lista.inicio == NULL;
-        lista.fim == NULL;
+        // lista.inicio == NULL; ❌ errado (comparação)
+        // lista.fim == NULL; ❌ errado (comparação)
+        lista.inicio = NULL; // ✅ correto
+        lista.fim = NULL;    // ✅ correto
         cout<<"Primeiro elemento deletado";
+        return;
     }
 
-    nav = lista.fim;
-    nav = nav->anterior;
-    nav->proximo = NULL;
-    delete nav->proximo;
+    lista.fim = lista.fim->anterior;
+    lista.fim->proximo = NULL;
+
+    // delete nav->proximo; ❌ errado (já perdeu referência)
+    delete nav; // ✅ correto
 }
 
 void inserePosicao(ListaDE &lista, string nomeCarta, int raridade, int posicao){
@@ -106,12 +117,20 @@ void inserePosicao(ListaDE &lista, string nomeCarta, int raridade, int posicao){
     cartaPokemon *nav = lista.inicio;
     for(int i = 1; i < posicao; i++){
         if(nav->proximo != NULL){
-            nav = nav->proximo; //funciona como se fosse um i++, serve para avançar a lista
+            nav = nav->proximo;
         }
         else{
             cout << "Posição Indisponivel!" << endl;
             return;
         }
+    }
+
+    // ⚠️ tratamento de inserção no início
+    if(nav->anterior == NULL){
+        novo->proximo = nav;
+        nav->anterior = novo;
+        lista.inicio = novo;
+        return;
     }
     
     novo->anterior = nav->anterior;
@@ -121,10 +140,13 @@ void inserePosicao(ListaDE &lista, string nomeCarta, int raridade, int posicao){
 }
 
 void removePosicao(ListaDE &lista, int posicao){
-cartaPokemon *nav = lista.inicio;
+    if(lista.inicio == NULL) return; // ✅ proteção
+
+    cartaPokemon *nav = lista.inicio;
+
     for(int i = 1; i < posicao; i++){
         if(nav->proximo != NULL){
-            nav = nav->proximo; //funciona como se fosse um i++, serve para avançar a lista
+            nav = nav->proximo;
         }
         else{
             cout << "Posição Indisponivel!" << endl;
@@ -132,10 +154,26 @@ cartaPokemon *nav = lista.inicio;
         }
     }
 
-    nav->anterior->proximo = nav->proximo;
+    // ⚠️ se for o primeiro
+    if(nav->anterior == NULL){
+        lista.inicio = nav->proximo;
+        if(lista.inicio != NULL)
+            lista.inicio->anterior = NULL;
+        else
+            lista.fim = NULL;
+    }
+    // ⚠️ se for o último
+    else if(nav->proximo == NULL){
+        lista.fim = nav->anterior;
+        lista.fim->proximo = NULL;
+    }
+    else{
+        nav->anterior->proximo = nav->proximo;
+        nav->proximo->anterior = nav->anterior; // ✅ faltava isso
+    }
+
     delete nav;
 }
-
 
 void imprimir(ListaDE lista){
     if(lista.inicio == NULL){
@@ -147,7 +185,7 @@ void imprimir(ListaDE lista){
 
     cartaPokemon *nav = lista.inicio;
     while(nav != NULL){
-        cout<<"Nome: "<<nav->nomeCarta<<endl;;
+        cout<<"Nome: "<<nav->nomeCarta<<endl;
         cout<<"Raridade: "<<nav->raridade<<endl;
         cout<<"--------"<<endl;
         nav = nav->proximo;
